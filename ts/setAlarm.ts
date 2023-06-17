@@ -1,3 +1,5 @@
+import { v4 as uuidv4 } from 'uuid';
+
 import express from 'express'
 import cors from 'cors'
 
@@ -14,12 +16,11 @@ app.post('/alarm/',async (req, res) => {
     // Handle the request and send a response
     try {
         //get new alarm(s) from request body
-        const jsonData = req.body;
-        const newAlarms: alarm = jsonData;
-        
+        const {time,days,enabled} = req.body;
         //read existing alarms from file
         //TODO WHAT IF FILE DOESN'T EXIST OR EMPTY?
         const savedAlarms: alarm[] = await readFromFile();
+        const newAlarms: alarm = {id: uuidv4(), time: time, days: days, active: enabled};
         
         //combine existing alarms with new alarms
         savedAlarms.push(newAlarms);
@@ -52,7 +53,7 @@ app.put('/alarm/:id', async (req, res) => {
         const savedAlarms: alarm[] = await readFromFile();
 
         //find the index of the alarm to update
-        const index = savedAlarms.findIndex( (alarm:alarm) => alarm.alarmId === updatedAlarm.alarmId);
+        const index = savedAlarms.findIndex( (alarm:alarm) => alarm.id === updatedAlarm.id);
 
         //if the alarm is not found, return a 404 error
         if (index === -1) {
@@ -83,7 +84,7 @@ app.delete('/alarm/:id', async (req, res) => {
         const savedAlarms: alarm[] = await readFromFile();
 
         //find index of alarm to delete
-        const index = savedAlarms.findIndex((alarm:alarm) => alarm.alarmId === Number(id));
+        const index = savedAlarms.findIndex((alarm:alarm) => alarm.id === id);
         if (index === -1) {
             res.status(500).send('Alarm not found');
             return;

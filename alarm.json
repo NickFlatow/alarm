@@ -1,1 +1,1 @@
-[{"alarmId":1,"time":"00:00","days":"[allthedays]","enabled":"true"},{"alarmId":3,"time":"11:30","days":"[]","enabled":"true"},{"alarmId":4,"time":"1:30","days":"['mo','tu']","enabled":"true"}]
+[{"id":"b3bcfdf9-7777-4ead-9288-21c928c2e067","time":"11:30","days":[],"active":true},{"id":"91922667-ce2d-4d76-9e90-8c279ebb06e5","time":"9:30","days":["1","2","3"],"active":false}]
