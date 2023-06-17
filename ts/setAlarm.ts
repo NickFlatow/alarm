@@ -10,7 +10,7 @@ app.use(express.json())   //parse request body as JSON
 
 const filePath = 'alarm.json';
 
-app.post('/alarm/set',async (req, res) => {
+app.post('/alarm/',async (req, res) => {
     // Handle the request and send a response
     try {
         //get new alarm(s) from request body
@@ -32,7 +32,8 @@ app.post('/alarm/set',async (req, res) => {
     }
 });
 
-app.get('/alarm/get', async (req, res) => {
+
+app.get('/alarm/', async (req, res) => {
     try {
         let alarms = await readFromFile();
         res.status(200).json(alarms);
@@ -41,7 +42,63 @@ app.get('/alarm/get', async (req, res) => {
         res.status(500).send(err);
     }
 });
+app.put('/alarm/:id', async (req, res) => {
+    try {
+        //get updated alarm from request body
+        const jsonData = req.body;
+        const updatedAlarm: alarm = jsonData;
 
+        //read existing alarms from file
+        const savedAlarms: alarm[] = await readFromFile();
+
+        //find the index of the alarm to update
+        const index = savedAlarms.findIndex( (alarm:alarm) => alarm.alarmId === updatedAlarm.alarmId);
+
+        //if the alarm is not found, return a 404 error
+        if (index === -1) {
+            res.status(500).send('Alarm not found');
+            return;
+        }
+
+        //update the alarm at the specified index
+        savedAlarms[index] = updatedAlarm;
+
+        //write the updated alarms to file
+        writeToFile(savedAlarms);
+
+        res.status(200).send('Alarm updated');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
+
+app.delete('/alarm/:id', async (req, res) => {
+    try {
+        //get ID of alarm to delete
+        const id = req.params.id;
+
+        //read existing alarms from file
+        //TODO WHAT IF FILE DOESN'T EXIST OR EMPTY?
+        const savedAlarms: alarm[] = await readFromFile();
+
+        //find index of alarm to delete
+        const index = savedAlarms.findIndex((alarm:alarm) => alarm.alarmId === Number(id));
+        if (index === -1) {
+            res.status(500).send('Alarm not found');
+            return;
+        }
+
+        //remove alarm from array
+        savedAlarms.splice(index, 1);
+
+        writeToFile(savedAlarms);
+        res.status(200).send('Alarm deleted');
+    } catch (err) {
+        console.error(err);
+        res.status(500).send(err);
+    }
+});
 
 function writeToFile(alarms:alarm[]) {
     
