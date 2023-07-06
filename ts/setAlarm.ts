@@ -2,15 +2,24 @@ import { v4 as uuidv4 } from 'uuid';
 
 import express from 'express'
 import cors from 'cors'
-
-import {alarm} from './data'
 import fs from 'fs'
+import * as url from 'url';
+
 
 const app = express();
 app.use(cors());
 app.use(express.json())   //parse request body as JSON
 
-const filePath = 'alarm.json';
+
+const filePath = '../alarm.json';
+const alarmFile = url.fileURLToPath(new URL(filePath , import.meta.url));
+
+interface alarm {
+    id: string;
+    time:string;
+    days: string[];
+    active: boolean;
+}
 
 app.post('/alarm/',async (req, res) => {
     // Handle the request and send a response
@@ -36,6 +45,8 @@ app.post('/alarm/',async (req, res) => {
 
 app.get('/alarm/', async (req, res) => {
     try {
+        // console.log(__filename);
+        // console.log(__dirname);
         let alarms = await readFromFile();
         res.status(200).json(alarms);
     } catch (err) {
@@ -103,7 +114,7 @@ app.delete('/alarm/:id', async (req, res) => {
 
 function writeToFile(alarms:alarm[]) {
     
-    fs.writeFileSync(filePath, JSON.stringify(alarms));
+    fs.writeFileSync(alarmFile, JSON.stringify(alarms));
     //use fs to write to file
     // fs.appendFile(filePath, alarm  + '\n', (err) => {
     //     if (err) throw new Error(err.message);
@@ -114,7 +125,7 @@ function writeToFile(alarms:alarm[]) {
 function readFromFile():Promise<alarm[]> {
     //use fs to read from file
     return new Promise((resolve, reject) => {
-        fs.readFile(filePath, 'utf8', (err, data) => {
+        fs.readFile(alarmFile, 'utf8', (err, data) => {
             if (err) {
                 console.error(err);
                 reject(err);

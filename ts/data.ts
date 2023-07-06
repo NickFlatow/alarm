@@ -4,7 +4,3 @@ export interface alarm {
     days: string[];
     active: boolean;
 }
-
-export interface error {
-    error: string;
-}

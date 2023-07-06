@@ -4,8 +4,9 @@
   "description": "Alarm Clock",
   "type": "module",
   "scripts": {
-    "build": "node ./dist/setAlarm.js",
-    "debug": "ts-node --esm ./ts/setAlarm.ts"
+    "build": "tsc",
+    "js": "node ./dist/setAlarm.js",
+    "dev": "ts-node --esm ./ts/setAlarm.ts"
   },
   "devDependencies": {
     "@types/cors": "^2.8.13",
