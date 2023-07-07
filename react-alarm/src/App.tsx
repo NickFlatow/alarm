@@ -2,13 +2,7 @@ import './App.css';
 import React, {useEffect, useState } from 'react';
 import { alarm, Day } from '../../ts/data';
 
-// export interface alarm {
-//     id: string;
-//     time:string;
-//     days: string[];
-//     active: boolean;
-// }
-
+const URL = "http://10.0.0.45:3000/alarm";
 
 export default function App() {
     return <AlarmTable />;
@@ -16,11 +10,10 @@ export default function App() {
 
 
 function AlarmTable() {
-    // const rows:ReactElement[] = [];
     const [alarms, setAlarms] = useState([]);
     
     const fetchAlarmData = () => { 
-        fetch("http://10.0.0.45:3000/alarm")
+        fetch(URL)
         .then(response => response.json())
         .then(alarms => {
             setAlarms(alarms);
@@ -32,68 +25,59 @@ function AlarmTable() {
     }, []);
 
     return (
-        <div className="card">
-            {alarms.length > 0 && (
-                <div className="alarms">
-                    {alarms.map((alarm: alarm) => (
-                        <div className="alarm-container">
-                            <div className="time-container">
-                                <h1 className="time">{alarm.time}</h1>
-                            </div>
-                            <div className="enabled-days-container">
-                                {/* <h1 className="days">{alarm.days}</h1> */}
-                                <div>
-                                    {alarm.days.map((day) => (
-                                        <EnableDay
-                                            key={day.dayOfWeek}
-                                            day={day}
-                                        />
-                                    ))}
-                                </div>
-                                <input 
-                                    type="checkbox" 
-                                    className="switch-checkbox"
-                                    id={alarm.id} 
-                                    checked={alarm.active}/>
-                                <label className="switch-label bottom" htmlFor={alarm.id}></label>
-                            </div>
-                        </div>
-                    ))}
-                    <button className="rounded-button yellow">+</button>
-                </div>
-            )}
+        <div className="card" style={{marginTop:'10px'}}>
+            <AlarmContainer key={`${Math.floor(Math.random() * 100) + 1}`} alarms={alarms}/>
+            <button className="rounded-button yellow">+</button>
         </div>
     )
-    // return (
-    //     <div>
-    //       {alarms.length > 0 && (
-    //         <ul>
-    //             {alarms.map((alarm: alarm) => (
-    //                 <React.Fragment key={alarm.id}>
-    //                     <li><b>id:     </b> {alarm.id}</li>
-    //                     <li><b>time:   </b> {alarm.time}</li>
-    //                     <li><b>days:   </b></li>
-    //                             <ul>
-    //                                 {alarm.days.length > 0 && 
-                                
-    //                                 (alarm.days.map( (day:string) => (
-    //                                     <li>{day}</li>
-    //                                     )))
-    //                                 }
-    //                             </ul>
-    //                     <li><b>active: </b> {alarm.active.toString()}</li>
-    //                     <br />
-    //                 </React.Fragment>
-    //             ))}
-    //         </ul>
-    //       )}
-    //     </div>
-    // );
-
+}
+function AlarmContainer({alarms}:{alarms:alarm[]}) {
+    return (
+        <div className="alarms">
+            {alarms.length && alarms.map((alarm: alarm) => (
+                <div className="alarm-container" style={{marginBottom: '10px'}}>
+                    <TimeContainer key={`tc ${alarm.id}`} alarm={alarm} />
+                    <SchedulerContainer key={`sc ${alarm.id}`} alarm={alarm} />
+                </div>
+            ))}
+        </div>
+    )
+}
+function TimeContainer({alarm}:{alarm:alarm}) {
+    return (
+        <div className="time-container">
+            <h1 className="time">{alarm.time}</h1>
+        </div>
+    )
+}
+function SchedulerContainer({alarm}:{alarm:alarm}) {
+    const [active,setActive ] = useState(alarm.active);
+    return (
+        <div className="schedule-container">
+            {/* 
+                div to group all button together
+                remove div to fit the width of the screen
+            */}
+            <div>
+                {alarm.days.map((day) => (
+                    <DayButton
+                        key={`db ${day.dayOfWeek} ${Math.floor(Math.random() * 100) + 1}`}
+                        day={day}
+                    />
+                ))}
+            </div>
+            <EnableSwitch 
+                key={`es ${alarm.id}`}
+                alarm={alarm} 
+                active={active}
+                setActive={setActive}
+            />
+        </div>
+    )
 }
 
-function EnableDay({ day }:{day:Day}) {
-    // console.log(day)
+
+function DayButton({ day }:{day:Day}) {
     return (
         <button 
             className="rounded-button blue"
@@ -103,4 +87,39 @@ function EnableDay({ day }:{day:Day}) {
         </button>
     )
 }
+function EnableSwitch({alarm,active,setActive}:{alarm:alarm,active:boolean,setActive:(active:boolean)=>void }) {
+    return (
+        <>
+            <input 
+                type="checkbox" 
+                className="switch-checkbox"
+                id={alarm.id} 
+                checked={active}
+                onChange={(e) =>{
+                    setActive(e.target.checked)
+                    console.log(e.target.checked)
+                    alarm.active = e.target.checked;
+                    updateAlarm(alarm);
+                }}
+            />
+            <label className="switch-label bottom" htmlFor={alarm.id}></label>
+        </>
+    )   
+}
+function updateAlarm(alarm:alarm) {
+    fetch(`${URL}/${alarm.id}`, {
+        method: 'PUT',
+        body: JSON.stringify(alarm),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        console.log(response.status)
+    })
+    .catch(error => {
+        // Handle error
+    });
+};
+
 

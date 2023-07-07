@@ -1,7 +1,6 @@
 export interface alarm {
     id: string;
     time:string;
-    // days: string[];
     days: Day[]
     active: boolean;
 }
