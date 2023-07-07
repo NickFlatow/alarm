@@ -23,6 +23,7 @@ interface alarm {
 
 app.post('/alarm/',async (req, res) => {
     // Handle the request and send a response
+    //TODO validate alarm
     try {
         //get new alarm(s) from request body
         const {time,days,enabled} = req.body;

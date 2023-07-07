@@ -1,9 +1,11 @@
 
+import { alarm } from './data'
 
 const timepicker = document.getElementById('alarm') as HTMLInputElement;
 timepicker.addEventListener('click', () => {
     timepicker.focus();
 });
+displayAlarms();
   
 timepicker.addEventListener('blur', () => {
     // Check if the time input value has changed
@@ -16,7 +18,7 @@ timepicker.addEventListener('blur', () => {
         };
 
 
-        fetch("http://10.0.0.45:3000/api/data", {
+        fetch("http://10.0.0.45:3000/alarm", {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json' // Specify the content type of the request body
@@ -36,5 +38,16 @@ timepicker.addEventListener('blur', () => {
         }); 
     }
 });
+//display set alarms from file
+function displayAlarms() {
+    fetch("http://10.0.0.45:3000/alarm")
+    .then(response => response.json())
+    .then(alarms => {
+        alarms.forEach((alarm: alarm) => {
+            //@ts-ignore
+            document.getElementById('alarms').innerHTML += JSON.stringify(alarm) + '<br>';
+        });
+    })
+}
 
 
