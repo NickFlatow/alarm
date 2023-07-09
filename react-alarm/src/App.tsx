@@ -1,19 +1,19 @@
 import './App.css';
 import React, {useEffect, useState } from 'react';
 import { alarm, Day } from '../../ts/data';
+import { fetchURL,throttledFetch } from './fetch'
 
-const URL = "http://10.0.0.45:3000/alarm";
+
 
 export default function App() {
     return <AlarmTable />;
 }
 
-
 function AlarmTable() {
     const [alarms, setAlarms] = useState([]);
     
     const fetchAlarmData = () => { 
-        fetch(URL)
+        fetch(fetchURL)
         .then(response => response.json())
         .then(alarms => {
             setAlarms(alarms);
@@ -97,29 +97,13 @@ function EnableSwitch({alarm,active,setActive}:{alarm:alarm,active:boolean,setAc
                 checked={active}
                 onChange={(e) =>{
                     setActive(e.target.checked)
-                    console.log(e.target.checked)
                     alarm.active = e.target.checked;
-                    updateAlarm(alarm);
+                    throttledFetch(alarm);
                 }}
             />
             <label className="switch-label bottom" htmlFor={alarm.id}></label>
         </>
     )   
 }
-function updateAlarm(alarm:alarm) {
-    fetch(`${URL}/${alarm.id}`, {
-        method: 'PUT',
-        body: JSON.stringify(alarm),
-        headers: {
-            'Content-Type': 'application/json'
-        }
-    })
-    .then(response => {
-        console.log(response.status)
-    })
-    .catch(error => {
-        // Handle error
-    });
-};
 
 
