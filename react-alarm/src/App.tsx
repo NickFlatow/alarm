@@ -1,5 +1,5 @@
 import './App.css';
-import React, {useEffect, useState } from 'react';
+import React, {useEffect, useState,useRef } from 'react';
 import { alarm, Day } from '../../ts/types';
 import { fetchURL,throttledFetch } from './fetch';
 
@@ -27,7 +27,9 @@ function AlarmTable() {
     return (
         <div className="card" style={{marginTop:'10px'}}>
             <AlarmContainer key={`${Math.floor(Math.random() * 100) + 1}`} alarms={alarms}/>
-            <button className="rounded-button yellow">+</button>
+            {/* <button className="rounded-button yellow">+</button> */}
+            {/* <CreateAlarmBtn /> */}
+            {/* <TimePicker /> */}
         </div>
     )
 }
@@ -54,17 +56,50 @@ function AlarmContainer({alarms}:{alarms:alarm[]}) {
         </div>
     )
 }
-function TimeContainer({alarm}:{alarm:alarm}) {
+// function CreateAlarmBtn() {
+//     function handleClick() {
+//         console.log("click");
+//         const tp = document.getElementById("myTimePicker");
+//         tp?.focus()
+//     }
+//     return (
+//         // <label htmlFor="myTimePicker" className="button-label">
+//             // <input type="time" id="myTimePicker" />
+//             <span 
+//                 className="button-text"
+//                 onClick={handleClick}
+//                 >
+//                 +
+//             </span>
+//          /* </label>  */
+//     )
+// }
+function TimePicker() {
     return (
-        <div className="time-container">
-            <h1 
-                className="time orange"
-                style={{ opacity: alarm.active ? 1 : 0.1 }}
-            >
-            {alarm.time}
-            </h1>
+        <label htmlFor="myTimePicker" className="button-label">
+            <input type="time" id="myTimePicker" />
+        </label> 
+    ) 
+}
+function TimeContainer({alarm}:{alarm:alarm}) {
+    const [time, setTime] = useState(alarm.time);
+    return (
+        <div className="time-container "
+            onClick= {() => {
+                //TODO FIX CLICK WINDOW SIZE ON NON MOBILE
+                const timePicker = document.querySelector<HTMLInputElement>('input[type="time"]');
+                timePicker?.focus();
+            }}
+        >
+        <input type="time"/>
+        <h1 
+            className="time orange"
+            style={{ opacity: alarm.active ? 1 : 0.1 }}
+        >
+            {time}
+        </h1>
         </div>
-    )
+    );
 }
 function SchedulerContainer({alarm,activeAlarm,setActiveAlarm}:{alarm:alarm,activeAlarm:boolean,setActiveAlarm:(active:boolean)=>void}) {
     return (

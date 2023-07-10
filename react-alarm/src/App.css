@@ -55,9 +55,24 @@ body {
 }
 
 .time-container {
+  /* allows time picker to take up the height and widht of the time-container */
+  display: inline-block;
+  position: relative;
+  
   margin-top:0;
   margin-bottom:0;
-  /* border: 1px solid blue; */
+}
+
+/* TIME PICKER */
+/* Hide the default input appearance */
+input[type="time"] {
+  opacity: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
 }
 
 .schedule-container {
@@ -85,7 +100,6 @@ body {
 }
 
 
-
 .days {
   margin-top:0;
   margin-bottom: 0;
@@ -108,7 +122,6 @@ body {
 .yellow {
   background-color: rgb(145, 109, 12);
 }
-
 
 
 /* toggle switches */

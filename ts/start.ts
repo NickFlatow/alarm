@@ -5,7 +5,7 @@ const timepicker = document.getElementById('alarm') as HTMLInputElement;
 timepicker.addEventListener('click', () => {
     timepicker.focus();
 });
-displayAlarms();
+// displayAlarms();
   
 timepicker.addEventListener('blur', () => {
     // Check if the time input value has changed
