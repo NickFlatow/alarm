@@ -43,7 +43,6 @@ body {
 
 
 /* Alarms */
-
 /* flex setup */
 .alarm-container {
   /* display:flex; */
@@ -74,8 +73,18 @@ body {
   margin-left:10px;
   margin-top:2.5;
   margin-bottom:2.5;
-  color: grey;
+  /* color: grey; */
 }
+
+/* time colors */
+.orange {
+  color:orange;
+}
+.grey {
+  color:grey;
+}
+
+
 
 .days {
   margin-top:0;
@@ -92,6 +101,7 @@ body {
   margin-right:10px;
   height:100%;
 }
+
 .blue {
   background-color: blue;
 }
@@ -100,8 +110,8 @@ body {
 }
 
 
-/* toggle switches */
 
+/* toggle switches */
 .switch-checkbox {
     display: none;
 }

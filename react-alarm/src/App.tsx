@@ -31,13 +31,24 @@ function AlarmTable() {
         </div>
     )
 }
+
 function AlarmContainer({alarms}:{alarms:alarm[]}) {
+    const [activeAlarms, setActiveAlarms] = useState(alarms.map(alarm => alarm.active));
     return (
         <div className="alarms">
-            {alarms.length && alarms.map((alarm: alarm) => (
+            {alarms.length && alarms.map((alarm: alarm, index: number) => (
                 <div className="alarm-container">
                     <TimeContainer key={`tc ${alarm.id}`} alarm={alarm} />
-                    <SchedulerContainer key={`sc ${alarm.id}`} alarm={alarm} />
+                    <SchedulerContainer 
+                        key={`sc ${alarm.id}`} 
+                        alarm={alarm}
+                        activeAlarm={activeAlarms[index]}
+                        setActiveAlarm={(value: boolean) => {
+                            const newActiveAlarms = [...activeAlarms];
+                            newActiveAlarms[index] = value;
+                            setActiveAlarms(newActiveAlarms);
+                        }} 
+                    />
                 </div>
             ))}
         </div>
@@ -46,13 +57,16 @@ function AlarmContainer({alarms}:{alarms:alarm[]}) {
 function TimeContainer({alarm}:{alarm:alarm}) {
     return (
         <div className="time-container">
-            <h1 className="time">{alarm.time}</h1>
+            <h1 
+                className="time orange"
+                style={{ opacity: alarm.active ? 1 : 0.1 }}
+            >
+            {alarm.time}
+            </h1>
         </div>
     )
 }
-function SchedulerContainer({alarm}:{alarm:alarm}) {
-    const [active,setActive ] = useState(alarm.active);
-    
+function SchedulerContainer({alarm,activeAlarm,setActiveAlarm}:{alarm:alarm,activeAlarm:boolean,setActiveAlarm:(active:boolean)=>void}) {
     return (
         <div className="schedule-container">
             {/* 
@@ -60,32 +74,35 @@ function SchedulerContainer({alarm}:{alarm:alarm}) {
                 remove div to fit the width of the screen
             */}
             <div>
-                {alarm.days.map((day,index) => (
+                {alarm.days.map((day:Day,index:number) => (
                     <DayButton
                         key={`db ${day.dayOfWeek} ${Math.floor(Math.random() * 100) + 1}`}
                         day={day}
                         alarm={alarm}
                         index={index}
+                        enableSwitch={activeAlarm}
                     />
                 ))}
             </div>
             <EnableSwitch 
                 key={`es ${alarm.id}`}
                 alarm={alarm} 
-                active={active}
-                setActive={setActive}
+                active={activeAlarm}
+                setActive={setActiveAlarm}
             />
         </div>
     )
 }
 
 
-function DayButton({day,alarm,index}:{day:Day,alarm:alarm,index:number}) {
+function DayButton({day,alarm,index,enableSwitch}:{day:Day,alarm:alarm,index:number,enableSwitch:boolean}) {
     const [activeDay,setActiveDay] = useState(day.active);
     return (
         <button 
             className="rounded-button blue"
-            style={{ opacity: activeDay ? 1 : 0.5 }}
+            // dim the lights and disable the button is enableSwitch is false
+            style={{ opacity: enableSwitch ? (activeDay ? 1 : 0.5) : 0.1 }}
+            disabled={!enableSwitch}
             onClick= {_ => {
                 const updatedState = !day.active;
                 setActiveDay(updatedState);
