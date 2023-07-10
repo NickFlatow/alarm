@@ -1,4 +1,4 @@
-import { alarm } from "../../ts/data"
+import { alarm } from "../../ts/types"
 
 type F = (...args: alarm[]) => void
 type uploadEntry = {alarm:alarm,timeout:NodeJS.Timeout}

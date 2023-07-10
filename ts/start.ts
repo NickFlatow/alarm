@@ -1,5 +1,5 @@
 
-import { alarm } from './data'
+import { alarm } from './types'
 
 const timepicker = document.getElementById('alarm') as HTMLInputElement;
 timepicker.addEventListener('click', () => {

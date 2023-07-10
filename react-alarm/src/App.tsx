@@ -1,13 +1,13 @@
 import './App.css';
 import React, {useEffect, useState } from 'react';
-import { alarm, Day } from '../../ts/data';
-import { fetchURL,throttledFetch } from './fetch'
-
-
+import { alarm, Day } from '../../ts/types';
+import { fetchURL,throttledFetch } from './fetch';
 
 export default function App() {
     return <AlarmTable />;
 }
+
+//TODO COMPONENT KEYS
 
 function AlarmTable() {
     const [alarms, setAlarms] = useState([]);
@@ -35,7 +35,7 @@ function AlarmContainer({alarms}:{alarms:alarm[]}) {
     return (
         <div className="alarms">
             {alarms.length && alarms.map((alarm: alarm) => (
-                <div className="alarm-container" style={{marginBottom: '10px'}}>
+                <div className="alarm-container">
                     <TimeContainer key={`tc ${alarm.id}`} alarm={alarm} />
                     <SchedulerContainer key={`sc ${alarm.id}`} alarm={alarm} />
                 </div>
@@ -52,6 +52,7 @@ function TimeContainer({alarm}:{alarm:alarm}) {
 }
 function SchedulerContainer({alarm}:{alarm:alarm}) {
     const [active,setActive ] = useState(alarm.active);
+    
     return (
         <div className="schedule-container">
             {/* 
@@ -59,10 +60,12 @@ function SchedulerContainer({alarm}:{alarm:alarm}) {
                 remove div to fit the width of the screen
             */}
             <div>
-                {alarm.days.map((day) => (
+                {alarm.days.map((day,index) => (
                     <DayButton
                         key={`db ${day.dayOfWeek} ${Math.floor(Math.random() * 100) + 1}`}
                         day={day}
+                        alarm={alarm}
+                        index={index}
                     />
                 ))}
             </div>
@@ -77,11 +80,18 @@ function SchedulerContainer({alarm}:{alarm:alarm}) {
 }
 
 
-function DayButton({ day }:{day:Day}) {
+function DayButton({day,alarm,index}:{day:Day,alarm:alarm,index:number}) {
+    const [activeDay,setActiveDay] = useState(day.active);
     return (
         <button 
             className="rounded-button blue"
-            style={{ opacity: day.active ? 1 : 0.5 }}
+            style={{ opacity: activeDay ? 1 : 0.5 }}
+            onClick= {_ => {
+                const updatedState = !day.active;
+                setActiveDay(updatedState);
+                alarm.days[index].active = updatedState;
+                throttledFetch(alarm);
+            }}
         >
         {day.dayOfWeek}
         </button>
