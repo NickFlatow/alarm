@@ -1,11 +1,13 @@
-import { alarm } from "../../ts/types"
+import { alarm } from "../../../ts/types"
 
 type F = (...args: alarm[]) => void
 type uploadEntry = {alarm:alarm,timeout:NodeJS.Timeout}
 
 
-export const throttledFetch = throttle(updateAlarm,1000);
-export const fetchURL = "http://10.0.0.45:3000/alarm";
+export const throttledUpdate = throttle(updateAlarm,1000);
+export const throttledCreate = throttle(createAlarm,1000);
+export const throttledDelete = throttle(deleteAlarm,1000);
+export const fetchURL = "http://10.0.0.10:3000/alarm";
 
 /**
  * disallow spamming of fetch request by adding deboucning map to throttle request
@@ -45,4 +47,36 @@ function updateAlarm(alarm:alarm) {
         console.error(error);
     });
 };
+function createAlarm(alarm:alarm) {
+    fetch(`${fetchURL}`, {
+        method: 'POST',
+        body: JSON.stringify(alarm),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        console.log(response.status)
+    })
+    .catch(error => {
+        // Handle error
+        console.error(error);
+    });
+};
+function deleteAlarm(alarm:alarm) {
+    fetch(`${fetchURL}/${alarm.id}`, {
+        method: 'DELETE',
+        body: JSON.stringify(alarm),
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        console.log(response.status)
+    })
+    .catch(error => {
+        // Handle error
+        console.error(error);
+    });
+}
 

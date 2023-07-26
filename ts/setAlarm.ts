@@ -26,19 +26,25 @@ app.post('/alarm/',async (req, res) => {
     //TODO validate alarm
     try {
         //get new alarm(s) from request body
-        const {time,days,enabled} = req.body;
+        
+        const {id,time,days,active}:alarm = req.body;
+
         //read existing alarms from file
         //TODO WHAT IF FILE DOESN'T EXIST OR EMPTY?
         const savedAlarms: alarm[] = await readFromFile();
-        const newAlarms: alarm = {id: uuidv4(), time: time, days: days, active: enabled};
+        // const newAlarm: alarm = {id: uuidv4(), time: time, days: days, active: active};
+        const newAlarm: alarm = {id: id, time: time, days: days, active: active};
         
         //combine existing alarms with new alarms
-        savedAlarms.push(newAlarms);
+        savedAlarms.push(newAlarm);
+        debugger;
 
+        console.log(newAlarm);
         writeToFile(savedAlarms);
-        res.status(200).send('Alarm set');
+        // res.status(200).send('Alarm set');
+        res.status(200).send(newAlarm);
     } catch (err) {
-        console.error(err);
+        console.error(err); 
         res.status(500).send(err);
     }
 });
@@ -90,7 +96,7 @@ app.delete('/alarm/:id', async (req, res) => {
     try {
         //get ID of alarm to delete
         const id = req.params.id;
-
+        console.log("delete alarm with id: " + id);
         //read existing alarms from file
         //TODO WHAT IF FILE DOESN'T EXIST OR EMPTY?
         const savedAlarms: alarm[] = await readFromFile();

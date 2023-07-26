@@ -52,15 +52,21 @@ body {
   border: 1px solid black;
   border-radius: 10px;
   margin-bottom:10px;
+
+
 }
 
 .time-container {
-  /* allows time picker to take up the height and widht of the time-container */
-  display: inline-block;
-  position: relative;
-  
   margin-top:0;
   margin-bottom:0;
+}
+
+.picker-strech { 
+  /* allows time picker to take up the height and width of the parent container */
+  display: inline-block;
+  position: relative;
+  /* width: 100%;
+  height: 100%; */
 }
 
 /* TIME PICKER */
@@ -74,6 +80,7 @@ input[type="time"] {
   height: 100%;
   cursor: pointer;
 }
+
 
 .schedule-container {
   display:flex;
@@ -98,7 +105,9 @@ input[type="time"] {
 .grey {
   color:grey;
 }
-
+.yellow {
+  color:yellow;
+}
 
 .days {
   margin-top:0;
@@ -106,6 +115,9 @@ input[type="time"] {
   /* position: absolute; */
   bottom: 0px;
 }
+
+
+/* BUTTONS */
 .rounded-button {
   border-radius: 10px;
   padding: 5px 10px;
@@ -123,8 +135,28 @@ input[type="time"] {
   background-color: rgb(145, 109, 12);
 }
 
+/* CREATE ALARM BUTTON */
+.button-container {
+  font-size: 14px;
+  color: #d169d4;
+  border: 1px solid rgb(214, 54, 54);
+  margin-left:200px;
+}
 
-/* toggle switches */
+/* DELETE DISPLAY BUTTON */
+.delete-display-button {
+  /* margin-left: 'auto'; */
+  /* display: 'block'; */
+  padding: '0px';
+  border:'none';
+  font-size:large;
+  text-align: center;
+}
+
+
+
+
+/* TOGGLE SWITCHES */
 .switch-checkbox {
     display: none;
 }
@@ -178,3 +210,5 @@ input[type="time"] {
 .switch-checkbox:checked + .disabled:after {
     transform: translateX(0);
 }
+
+
