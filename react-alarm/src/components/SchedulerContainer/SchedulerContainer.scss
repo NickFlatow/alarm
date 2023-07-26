@@ -1,0 +1,16 @@
+@import '../../../public/global.scss';
+@import './TimeContainer.scss';
+@import './ActivateAlarmSwitch.scss';
+
+
+.schedule-container {
+    display:flex;
+    flex-wrap:wrap;
+    justify-content: space-between;
+    margin-left:10px;
+    margin-bottom:10px;
+    /* border: 1px solid red; */
+}
+  
+
+

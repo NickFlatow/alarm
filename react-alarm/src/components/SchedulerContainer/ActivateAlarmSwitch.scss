@@ -1,0 +1,58 @@
+/* TOGGLE SWITCH */
+.switch-checkbox {
+    display: none;
+}
+
+.switch-label {
+    /* position: absolute; */
+    /* bottom: 0; */
+    position: relative;
+    display: inline-block;
+    width: 60px;
+    height: 34px;
+    background-color: #ddd;
+    border-radius: 34px;
+    transition: background-color 0.3s;
+}
+
+
+.switch-label:after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 4px;
+    width: 26px;
+    height: 26px;
+    border-radius: 26px;
+    background-color: #fff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s;
+}
+
+.switch-checkbox:checked + .switch-label {
+    background-color: #66bb6a;
+}
+
+.switch-checkbox:checked + .switch-label:after {
+    transform: translateX(26px);
+}
+
+.switch-checkbox + .disabled {
+    background-color: #ee0f0f !important;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+.switch-checkbox + .disabled {
+    background-color: #ee0f0f !important;
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.switch-checkbox:checked + .disabled:after {
+    transform: translateX(0);
+}
+
+/* CSS class for the upside-down flip */
+.flip-upside-down {
+  transform: rotate(180deg);
+}
